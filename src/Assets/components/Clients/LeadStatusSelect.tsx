@@ -28,6 +28,7 @@ const LeadStatusSelect: React.FC<LeadStatusSelectProps> = ({
             <option value="nuevo">Nuevo</option>
             <option value="contactado">Contactado</option>
             <option value="descartado">Descartado</option>
+
         </select>
     );
 };

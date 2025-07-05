@@ -8,7 +8,7 @@ const LandingPage: React.FC = () => {
             {/* Header */}
             <header className="bg-white shadow py-4 px-6 flex justify-between items-center">
                 <h1 className="text-xl font-bold">Mini CRM de Leads</h1>
-                <a href="/dashboard" className="text-blue-600 hover:underline font-medium">
+                <a href="/Login" className="text-blue-600 hover:underline font-medium">
                     Iniciar sesión
                 </a>
             </header>

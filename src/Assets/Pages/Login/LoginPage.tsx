@@ -8,6 +8,7 @@ const LoginPage: React.FC = () => {
     const handleLogin = async (email: string, password: string): Promise<boolean> => {
         // Aquí simulas login real (puedes usar fetch o axios)
         if (email === 'admin@example.com' && password === '123456') {
+            localStorage.setItem('token', 'fake-jwt-token');
             // localStorage.setItem('token', 'JWT...');
             navigate('/dashboard');
             return true;

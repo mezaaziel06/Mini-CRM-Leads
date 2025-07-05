@@ -27,50 +27,50 @@ const ContactForm: React.FC = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    // Validación simple
-    if (!formData.nombre || !formData.correo || !formData.telefono || !formData.mensaje) {
-        toast.error('Todos los campos son obligatorios');
-        return;
-    }
-
-    try {
-        const response = await fetch('http://localhost:3000/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al enviar el formulario');
+        // Validación simple
+        if (!formData.nombre || !formData.correo || !formData.telefono || !formData.mensaje) {
+            toast.error('Todos los campos son obligatorios');
+            return;
         }
 
-        // Mostrar SweetAlert
-        Swal.fire({
-            title: '¡Formulario enviado!',
-            text: 'Gracias por contactarnos. Te responderemos pronto.',
-            icon: 'success',
-            confirmButtonColor: '#2563eb',
-        });
+        try {
+            const response = await fetch('http://localhost:3000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-        toast.success('Enviado correctamente ✅');
+            if (!response.ok) {
+                throw new Error('Error al enviar el formulario');
+            }
 
-        // Limpiar formulario
-        setFormData({
-            nombre: '',
-            correo: '',
-            telefono: '',
-            mensaje: '',
-        });
-    } catch (error) {
-        toast.error('Error al enviar el formulario. Intenta más tarde.');
-        console.error(error);
-    }
-};
+            // Mostrar SweetAlert
+            Swal.fire({
+                title: '¡Formulario enviado!',
+                text: 'Gracias por contactarnos. Te responderemos pronto.',
+                icon: 'success',
+                confirmButtonColor: '#2563eb',
+            });
+
+            toast.success('Enviado correctamente ✅');
+
+            // Limpiar formulario
+            setFormData({
+                nombre: '',
+                correo: '',
+                telefono: '',
+                mensaje: '',
+            });
+        } catch (error) {
+            toast.error('Error al enviar el formulario. Intenta más tarde.');
+            console.error(error);
+        }
+    };
 
 
     return (
@@ -117,7 +117,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                     Enviar mensaje
                 </button>
             </form>
-
             <ToastContainer position="bottom-right" autoClose={3000} />
         </>
     );
