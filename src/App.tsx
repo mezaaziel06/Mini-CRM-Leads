@@ -7,15 +7,10 @@ import LandingPage from './Assets/Pages/Welcome/LandingPage';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/Login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="font-sans">
+      <LoginForm />
+    </div>
   );
-};
-};
+}
 
 export default App;
