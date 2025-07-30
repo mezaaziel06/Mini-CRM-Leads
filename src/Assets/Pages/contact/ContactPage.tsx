@@ -5,122 +5,121 @@ import Swal from 'sweetalert2';
 import { toast, ToastContainer } from 'react-toastify';
 
 interface FormData {
-    nombre: string;
-    correo: string;
-    telefono: string;
-    mensaje: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
 }
-//http://localhost:3000/users
 
 const ContactForm: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({
-        nombre: '',
-        correo: '',
-        telefono: '',
-        mensaje: '',
-    });
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  const [loading, setLoading] = useState(false);
 
-const handleSubmit = async (e: React.FormEvent) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validación simple
-    if (!formData.nombre || !formData.correo || !formData.telefono || !formData.mensaje) {
-        toast.error('Todos los campos son obligatorios');
-        return;
+    const { name, email, phone, message } = formData;
+    if (!name || !email || !phone || !message) {
+      toast.error('Todos los campos son obligatorios');
+      return;
     }
+
+    setLoading(true);
 
     try {
-        const response = await fetch('http://localhost:3000/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+      const response = await fetch('http://localhost:3000/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-        if (!response.ok) {
-            throw new Error('Error al enviar el formulario');
-        }
+      if (!response.ok) throw new Error('Error al enviar el formulario');
 
-        // Mostrar SweetAlert
-        Swal.fire({
-            title: '¡Formulario enviado!',
-            text: 'Gracias por contactarnos. Te responderemos pronto.',
-            icon: 'success',
-            confirmButtonColor: '#2563eb',
-        });
+      Swal.fire({
+        title: '¡Mensaje enviado!',
+        text: 'Gracias por contactarnos. Te responderemos pronto.',
+        icon: 'success',
+        confirmButtonColor: '#2563eb',
+      });
 
-        toast.success('Enviado correctamente ✅');
-
-        // Limpiar formulario
-        setFormData({
-            nombre: '',
-            correo: '',
-            telefono: '',
-            mensaje: '',
-        });
+      toast.success('Mensaje enviado correctamente ✅');
+      setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error) {
-        toast.error('Error al enviar el formulario. Intenta más tarde.');
-        console.error(error);
+      toast.error('Ocurrió un error al enviar el mensaje.');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-};
+  };
 
+  return (
+    <section className="w-full bg-gradient-to-b from-white via-gray-50 to-gray-100 py-16 px-4">
+      <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-10 border border-gray-100">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6">
+          Contáctanos
+        </h2>
+        <p className="text-center text-gray-500 mb-10">
+          ¿Tienes dudas o quieres más información? Completa el siguiente formulario.
+        </p>
 
-    return (
-        <>
-            <form
-                onSubmit={handleSubmit}
-                className="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg"
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <FormInput
+            label="Nombre completo"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <FormInput
+            label="Correo electrónico"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <FormInput
+            label="Teléfono"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          <FormTextArea
+            label="Mensaje"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+          />
+
+          <div className="text-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl transition duration-300 ${
+                loading ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
             >
-                <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
-                    Formulario de Contacto
-                </h2>
+              {loading ? 'Enviando...' : 'Enviar mensaje'}
+            </button>
+          </div>
+        </form>
+      </div>
 
-                <FormInput
-                    label="Nombre completo"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                />
-                <FormInput
-                    label="Correo electrónico"
-                    name="correo"
-                    type="email"
-                    value={formData.correo}
-                    onChange={handleChange}
-                />
-                <FormInput
-                    label="Teléfono"
-                    name="telefono"
-                    type="tel"
-                    value={formData.telefono}
-                    onChange={handleChange}
-                />
-                <FormTextArea
-                    label="Mensaje"
-                    name="mensaje"
-                    value={formData.mensaje}
-                    onChange={handleChange}
-                />
-
-                <button
-                    type="submit"
-                    className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 ease-in-out"
-                >
-                    Enviar mensaje
-                </button>
-            </form>
-
-            <ToastContainer position="bottom-right" autoClose={3000} />
-        </>
-    );
+      <ToastContainer position="bottom-right" autoClose={3000} />
+    </section>
+  );
 };
 
 export default ContactForm;
